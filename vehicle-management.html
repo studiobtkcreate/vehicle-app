@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="車両管理">
+<title>車両管理</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.10.0/tabler-icons.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<style>
+:root{--bl:#185FA5;--bll:#E6F1FB;--bld:#0C447C;--gn:#1D9E75;--gnl:#E1F5EE;--or:#BA7517;--orl:#FDF3E7;--rd:#C0392B;--rdl:#FEE2E2;--pu:#7B4FC5;--pul:#F0EBFF;--bg:#F2F4F7;--cd:#fff;--br:rgba(0,0,0,.08);--tx:#1A1A1A;--t2:#6B7280;--r:14px;--rs:10px;--fn:-apple-system,BlinkMacSystemFont,'Hiragino Sans',sans-serif}
+.dk{--bg:#111827;--cd:#1F2937;--br:rgba(255,255,255,.09);--tx:#F9FAFB;--t2:#9CA3AF;--bll:#1E3A5F;--gnl:#0D3D2E;--orl:#3D2A0A;--rdl:#3D0E0E;--pul:#2A1A4A}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;font-family:var(--fn);background:var(--bg)}
+#app{max-width:430px;margin:0 auto;min-height:100vh;background:var(--bg)}
+.hd{background:var(--bl);padding:14px 16px 0}.hr{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.hb{width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,.2);border:none;color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;font-size:18px}
+.ht{flex:1;color:#fff;font-size:18px;font-weight:600;line-height:1.2}.hs{color:rgba(255,255,255,.7);font-size:12px;margin-top:1px;font-weight:400}
+.trow{display:flex}.tb{flex:1;padding:9px 0;text-align:center;font-size:13px;font-weight:500;color:rgba(255,255,255,.5);cursor:pointer;border-bottom:2px solid transparent}.tb.on{color:#fff;border-bottom-color:#fff}
+.bd{flex:1;padding:12px;overflow-y:auto;padding-bottom:82px}.gp{display:flex;flex-direction:column;gap:10px}
+.ca{background:var(--cd);border-radius:var(--r);border:.5px solid var(--br);padding:13px 15px}
+.ct{font-size:11px;font-weight:600;color:var(--t2);text-transform:uppercase;letter-spacing:.05em;margin-bottom:10px}
+.fl{display:flex;flex-direction:column;gap:4px;margin-bottom:10px}.fl:last-child{margin-bottom:0}
+.fl label{font-size:12px;color:var(--t2)}
+.fl input,.fl select,.fl textarea{background:var(--bg);border:.5px solid var(--br);border-radius:var(--rs);padding:10px 12px;font-size:15px;color:var(--tx);font-family:var(--fn);width:100%}
+.fl textarea{resize:none;height:68px;line-height:1.5}
+.fl input:focus,.fl select:focus,.fl textarea:focus{outline:none;border-color:var(--bl)}
+.fr{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:10px}
+.rq{color:#D85A30;margin-left:2px}.hn{font-size:11px;color:var(--t2);margin-top:2px}
+.kg{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.ki{background:var(--bg);border-radius:var(--rs);padding:9px 11px}
+.kl{font-size:11px;color:var(--t2);margin-bottom:2px}.kv{font-size:19px;font-weight:700;color:var(--tx)}.ku{font-size:12px;font-weight:400;color:var(--t2);margin-left:2px}
+.bge{font-size:11px;padding:2px 8px;border-radius:99px;font-weight:600;flex-shrink:0;white-space:nowrap}
+.ok{background:#EAF3DE;color:#3B6D11}.wn{background:var(--orl);color:var(--or)}.nw{background:var(--bll);color:var(--bld)}.lw{background:var(--rdl);color:var(--rd)}
+.vc{background:var(--cd);border-radius:var(--r);border:.5px solid var(--br);padding:12px 14px;margin-bottom:9px;display:flex;align-items:center;gap:12px;cursor:pointer}
+.vi{width:44px;height:44px;border-radius:var(--rs);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:22px}
+.vn{font-size:15px;font-weight:600;color:var(--tx)}.vm{font-size:12px;color:var(--t2);margin-top:2px}
+.ri{display:flex;align-items:flex-start;gap:10px;padding:9px 0;border-bottom:.5px solid var(--br)}
+.ri:last-child{border-bottom:none;padding-bottom:0}.ri:first-child{padding-top:0}
+.ic{width:32px;height:32px;border-radius:var(--rs);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:16px}
+.if2{background:var(--gnl);color:var(--gn)}.im{background:var(--bll);color:var(--bl)}.iw{background:var(--orl);color:var(--or)}.id2{background:var(--pul);color:var(--pu)}
+.rb{flex:1;min-width:0}.rt{font-size:14px;font-weight:500;color:var(--tx)}.rd2{font-size:12px;color:var(--t2);margin-top:1px}.dt{font-size:11px;color:var(--t2);flex-shrink:0;margin-top:2px}
+.bp{background:var(--bl);color:#fff;border:none;border-radius:var(--r);padding:13px;font-size:15px;font-weight:600;width:100%;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px;font-family:var(--fn)}
+.bs{background:var(--cd);border:.5px solid var(--br);border-radius:var(--r);padding:12px;font-size:14px;font-weight:500;width:100%;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px;font-family:var(--fn);color:var(--tx)}
+.tg{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.tb2{background:var(--bg);border:.5px solid var(--br);border-radius:var(--rs);padding:11px 7px;display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer}
+.tb2 i{font-size:24px;color:var(--t2)}.tb2 span{font-size:12px;color:var(--t2);font-weight:500}
+.tb2.on{border:2px solid var(--bl);background:var(--bll)}.tb2.on i,.tb2.on span{color:var(--bl)}
+.cb{background:var(--bll);border-radius:var(--rs);padding:10px 12px;display:flex;justify-content:space-between;align-items:center;margin-top:4px}
+.cl{font-size:13px;color:var(--bld)}.cv{font-size:19px;font-weight:700;color:var(--bl)}.cu{font-size:12px;color:var(--bl);margin-left:2px}
+.rz{border:2px dashed var(--br);border-radius:var(--r);padding:18px;text-align:center;cursor:pointer}
+.rz i{font-size:30px;color:var(--bl);display:block;margin-bottom:5px}.rz p{font-size:13px;color:var(--t2)}
+.rbs{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.rb2{padding:10px 7px;border-radius:var(--rs);border:.5px solid var(--br);background:var(--bg);font-size:13px;font-weight:500;color:var(--bl);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:5px;font-family:var(--fn)}
+.sp2{width:18px;height:18px;border:2px solid var(--bl);border-top-color:transparent;border-radius:50%;animation:sp2 .8s linear infinite;flex-shrink:0}
+@keyframes sp2{to{transform:rotate(360deg)}}
+.cg{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.cb2{background:var(--bg);border:.5px solid var(--br);border-radius:var(--rs);padding:9px 5px;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer}
+.cb2 i{font-size:20px;color:var(--t2)}.cb2 span{font-size:11px;color:var(--t2);font-weight:500;text-align:center}
+.cb2.on{border:2px solid var(--bl);background:var(--bll)}.cb2.on i,.cb2.on span{color:var(--bl)}
+.pr{display:flex;gap:6px;align-items:center;margin-bottom:7px}.pr input{flex:1}.pr .pi{width:85px;flex:none}
+.pd{width:34px;height:40px;background:none;border:.5px solid var(--br);border-radius:var(--rs);color:var(--t2);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:15px}
+.ap{display:flex;align-items:center;gap:5px;color:var(--bl);font-size:13px;font-weight:500;cursor:pointer;padding:5px 0 0;background:none;border:none;font-family:var(--fn)}
+.sr{display:flex;align-items:center;padding:11px 14px;border-bottom:.5px solid var(--br);gap:10px;cursor:pointer}.sr:last-child{border-bottom:none}
+.si{width:31px;height:31px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:16px}
+.st{flex:1}.stt{font-size:14px;color:var(--tx);font-weight:500}.ss{font-size:11px;color:var(--t2);margin-top:1px}
+.tgl{position:relative;width:44px;height:26px;flex-shrink:0}.tgl input{opacity:0;width:0;height:0}
+.sl{position:absolute;cursor:pointer;inset:0;background:#D1D5DB;border-radius:13px;transition:background .2s}
+.sl:before{content:'';position:absolute;width:20px;height:20px;left:3px;bottom:3px;background:#fff;border-radius:50%;transition:transform .2s;box-shadow:0 1px 3px rgba(0,0,0,.2)}
+input:checked+.sl{background:var(--bl)}input:checked+.sl:before{transform:translateX(18px)}
+.sw{width:27px;height:27px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;border:2.5px solid transparent;font-size:12px;color:#fff}.sw.on{border-color:var(--tx)}
+.nav{background:var(--cd);border-top:.5px solid var(--br);display:flex;padding:7px 0 13px;position:fixed;bottom:0;width:100%;max-width:430px;z-index:200}
+.ni{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;cursor:pointer;padding:2px 0;position:relative}
+.ni i{font-size:21px;color:var(--t2)}.ni span{font-size:10px;color:var(--t2)}.ni.on i,.ni.on span{color:var(--bl)}
+.ndot{position:absolute;top:0;right:calc(50% - 16px);width:9px;height:9px;border-radius:50%;background:var(--rd);border:1.5px solid var(--cd)}
+.fab{position:fixed;bottom:70px;right:calc(50% - 200px);width:50px;height:50px;border-radius:50%;background:var(--bl);border:none;color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 3px 12px rgba(24,95,165,.4);font-size:23px;z-index:199}
+.sc{display:none;flex-direction:column;min-height:100vh}.sc.on{display:flex}
+.es{text-align:center;padding:28px 14px;color:var(--t2)}
+.es i{font-size:40px;opacity:.2;display:block;margin-bottom:9px}.es p{font-size:14px}.es .sb{font-size:12px;margin-top:4px;opacity:.7}
+.sl2{font-size:11px;font-weight:600;color:var(--t2);text-transform:uppercase;letter-spacing:.05em;margin-bottom:7px;padding-left:2px}
+.toast{position:fixed;bottom:88px;left:50%;transform:translateX(-50%) translateY(20px);background:#1F2937;color:#fff;padding:9px 18px;border-radius:99px;font-size:13px;font-weight:500;opacity:0;transition:all .3s;z-index:999;white-space:nowrap;pointer-events:none}
+.toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
+.ov{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:300;display:none;align-items:flex-end;justify-content:center}.ov.on{display:flex}
+.md{background:var(--cd);border-radius:var(--r) var(--r) 0 0;width:100%;max-width:430px;padding:18px;max-height:85vh;overflow-y:auto}
+.mdt{font-size:17px;font-weight:600;color:var(--tx);margin-bottom:11px}
+.ma{display:flex;gap:9px;margin-top:14px}.ma .bp,.ma .bs{flex:1}
+.ir{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:.5px solid var(--br)}
+.ir:last-child{border-bottom:none}.ir:first-child{padding-top:0}
+.il{font-size:13px;color:var(--t2)}.iv{font-size:14px;font-weight:500;color:var(--tx)}
+.nh{font-size:12px;color:var(--t2);background:var(--bll);border-radius:var(--rs);padding:9px 11px;display:flex;gap:6px}
+.nh i{color:var(--bl);flex-shrink:0;margin-top:1px}
+.n3{display:grid;grid-template-columns:1fr auto 1fr;gap:7px;align-items:end;margin-bottom:9px}
+.ol{font-size:12px;color:var(--t2);text-align:center;padding-bottom:10px}
+.ph{display:flex;gap:7px;flex-wrap:wrap}
+.pa{width:68px;height:68px;border-radius:var(--rs);border:1.5px dashed var(--br);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;cursor:pointer;color:var(--bl);font-size:11px}.pa i{font-size:22px}
+.pt{width:68px;height:68px;border-radius:var(--rs);object-fit:cover;border:.5px solid var(--br)}
+.pf{display:flex;gap:6px;overflow-x:auto;padding-bottom:3px;margin-bottom:11px;scrollbar-width:none}.pf::-webkit-scrollbar{display:none}
+.fb{padding:6px 13px;border-radius:99px;font-size:13px;font-weight:500;border:.5px solid var(--br);background:var(--cd);color:var(--t2);cursor:pointer;white-space:nowrap;flex-shrink:0;font-family:var(--fn)}.fb.on{background:var(--bl);color:#fff;border-color:var(--bl)}
+.pit{display:flex;align-items:center;gap:11px;padding:10px 0;border-bottom:.5px solid var(--br)}.pit:last-child{border-bottom:none;padding-bottom:0}.pit:first-child{padding-top:0}
+.pin{flex:1;min-width:0}.pn{font-size:14px;font-weight:500;color:var(--tx)}.pm{font-size:12px;color:var(--t2);margin-top:2px}
+.pr2{display:flex;flex-direction:column;align-items:flex-end;gap:3px}
+.sv{font-size:14px;font-weight:700;color:var(--tx)}.su{font-size:11px;color:var(--t2);margin-left:2px}
+.sb2{width:54px;height:4px;background:var(--bg);border-radius:99px;overflow:hidden}
+.sf{height:100%;border-radius:99px;background:var(--gn)}.sf.lw{background:var(--or)}.sf.ot{background:var(--rd)}
+.sk{display:flex;gap:5px;margin-top:3px}
+.skb{width:26px;height:26px;border-radius:var(--rs);border:.5px solid var(--br);background:var(--bg);color:var(--tx);font-size:16px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;font-family:var(--fn)}
+.skb.p{border-color:var(--gn);color:var(--gn)}.skb.m{border-color:var(--rd);color:var(--rd)}
+.mn{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:.5px solid var(--br)}.mn:last-child{border-bottom:none;padding-bottom:0}.mn:first-child{padding-top:0}
+.mi{flex:1}.mnm{font-size:14px;font-weight:500;color:var(--tx)}.md2{font-size:11px;color:var(--t2);margin-top:2px}
+.gc{background:var(--cd);border-radius:var(--r);border:.5px solid var(--br);padding:12px 14px;display:flex;align-items:center;gap:11px;cursor:pointer}
+.gci{width:38px;height:38px;border-radius:var(--rs);background:var(--pul);color:var(--pu);display:flex;align-items:center;justify-content:center;font-size:19px;flex-shrink:0}
+.chwrap{position:relative;height:190px;margin-top:4px}
+.chwrap.sm{height:150px}
+/* 広告スペース：非タップ・控えめ表示。実際の広告配信は今後、広告ネットワークとの連携が必要 */
+.adslot{background:var(--bg);border:1px dashed var(--br);border-radius:var(--rs);padding:12px;text-align:center;pointer-events:none;user-select:none;opacity:.8;margin-top:2px}
+.adtag{font-size:9px;color:var(--t2);letter-spacing:.08em;font-weight:600;display:block;margin-bottom:3px}
+.adbody{font-size:12px;color:var(--t2)}
+</style>
+</head>
+<body>
+<div id="app">
+<div class="toast" id="toast"></div>
+<nav class="nav">
+  <div class="ni on" id="n0" onclick="go('sh')"><i class="ti ti-home"></i><span>ホーム</span><span class="ndot" id="ndotHome" style="display:none"></span></div>
+  <div class="ni" id="n1" onclick="go('sf')"><i class="ti ti-gas-station"></i><span>給油</span></div>
+  <div class="ni" id="n2" onclick="goV()"><i class="ti ti-motorbike"></i><span>車両</span></div>
+  <div class="ni" id="n3" onclick="go('sp')"><i class="ti ti-package"></i><span>部品</span></div>
+  <div class="ni" id="n4" onclick="go('ss')"><i class="ti ti-settings"></i><span>設定</span></div>
+</nav>
+
+<!-- HOME -->
+<div class="sc on" id="sh">
+  <div class="hd" style="padding-bottom:14px"><div class="hr" style="margin-bottom:0"><span class="ht"><i class="ti ti-car" style="margin-right:5px;font-size:16px;vertical-align:-2px"></i>車両管理</span><button class="hb" onclick="go('sav')"><i class="ti ti-plus"></i></button></div></div>
+  <div class="bd gp">
+    <div><p class="sl2">登録車両</p><div id="vlist"></div><div class="vc" onclick="go('sav')" style="border:.5px dashed var(--br)"><div class="vi" style="background:var(--bg)"><i class="ti ti-plus" style="color:var(--bl)"></i></div><div><div class="vn" style="color:var(--bl)">車両を追加する</div></div></div></div>
+    <div id="halert-wrap"></div>
+    <div><p class="sl2">直近の記録</p><div id="rlist"></div></div>
+    <div><p class="sl2">今月のサマリー</p><div class="kg" id="hkpi"></div></div>
+    <div class="gc" onclick="go('sg')"><div class="gci"><i class="ti ti-chart-bar"></i></div><div style="flex:1"><div style="font-size:14px;font-weight:600;color:var(--tx)">統計・グラフを見る</div><div style="font-size:12px;color:var(--t2);margin-top:1px">燃費推移・費用・走行距離のグラフ</div></div><i class="ti ti-chevron-right" style="color:var(--t2)"></i></div>
+    <div class="adslot"><span class="adtag">広告</span><div class="adbody">広告スペース（未配信）</div></div>
+  </div>
+</div>
+
+<!-- GRAPHS -->
+<div class="sc" id="sg">
+  <div class="hd"><div class="hr"><button class="hb" onclick="goBack()"><i class="ti ti-arrow-left"></i></button><div class="ht">統計・グラフ</div></div></div>
+  <div class="bd gp">
+    <div class="ca"><p class="ct">対象車両</p><div class="fl"><select id="gvs" onchange="renderGraphs()"><option value="">全車両（合計）</option></select></div></div>
+    <div class="ca"><p class="ct">月別費用（給油＋整備）</p><div class="chwrap"><canvas id="chCost"></canvas></div><div class="es" id="chCostEmpty" style="display:none;padding:10px 0"><i class="ti ti-chart-bar" style="font-size:28px"></i><p style="font-size:13px">まだ費用データがありません</p></div></div>
+    <div class="ca"><p class="ct">燃費推移（給油記録）</p><div class="chwrap"><canvas id="chEff"></canvas></div><div class="es" id="chEffEmpty" style="display:none;padding:10px 0"><i class="ti ti-gas-station" style="font-size:28px"></i><p style="font-size:13px">燃費データ（km/L）がある給油記録がありません</p></div></div>
+    <div class="ca"><p class="ct">月別走行距離</p><div class="chwrap sm"><canvas id="chKm"></canvas></div><div class="es" id="chKmEmpty" style="display:none;padding:10px 0"><i class="ti ti-road" style="font-size:28px"></i><p style="font-size:13px">走行記録がありません</p></div></div>
+  </div>
+</div>
+
+<!-- ADD VEHICLE -->
+<div class="sc" id="sav">
+  <div class="hd"><div class="hr"><button class="hb" onclick="goBack()"><i class="ti ti-arrow-left"></i></button><div class="ht">車両を追加</div></div></div>
+  <div class="bd gp">
+    <div class="ca"><p class="ct">車両タイプ</p><div class="tg" id="tg">
+      <div class="tb2 on" data-t="car" onclick="selT(this)"><i class="ti ti-car"></i><span>乗用車</span></div>
+      <div class="tb2" data-t="bike" onclick="selT(this)"><i class="ti ti-motorbike"></i><span>バイク</span></div>
+      <div class="tb2" data-t="truck" onclick="selT(this)"><i class="ti ti-truck"></i><span>トラック</span></div>
+      <div class="tb2" data-t="other" onclick="selT(this)"><i class="ti ti-car-suv"></i><span>その他</span></div>
+    </div></div>
+    <div class="ca"><p class="ct">基本情報</p>
+      <div class="fl"><label>メーカー<span class="rq">*</span></label><input id="am" placeholder="例: Kawasaki、トヨタ"></div>
+      <div class="fl"><label>車種・モデル名<span class="rq">*</span></label><input id="ao" placeholder="例: ゼファー、ハスラー"></div>
+      <div class="fr"><div class="fl"><label>年式</label><input type="number" id="ay" placeholder="1996" min="1900" max="2030"></div><div class="fl"><label>カラー</label><input id="ac" placeholder="ブルー"></div></div>
+      <div class="fl"><label>ナンバー</label><input id="ap2" placeholder="例: 鳥取 300 あ 1234"></div>
+    </div>
+    <div class="ca"><p class="ct">走行・燃料</p>
+      <div class="fl"><label>走行距離（km）<span class="rq">*</span></label><input type="number" id="ad" placeholder="例: 14000" min="0"><p class="hn">登録時点のオドメーター値</p></div>
+      <div class="fr"><div class="fl"><label>燃料タイプ</label><select id="af"><option value="">選択</option><option value="regular">レギュラー</option><option value="premium">ハイオク</option><option value="diesel">軽油</option><option value="hybrid">ハイブリッド</option><option value="ev">電気EV</option></select></div><div class="fl"><label>タンク容量(L)</label><input type="number" id="at" placeholder="18" min="1"></div></div>
+    </div>
+    <div class="ca"><p class="ct">メモ</p><div class="fl"><textarea id="ame" placeholder="カスタムパーツや特記事項..."></textarea></div></div>
+    <button class="bp" onclick="saveV()"><i class="ti ti-check"></i>この車両を登録する</button>
+  </div>
+</div>
+
+<!-- VEHICLE DETAIL -->
+<div class="sc" id="svd">
+  <div class="hd">
+    <div class="hr"><button class="hb" onclick="go('sh')"><i class="ti ti-arrow-left"></i></button><div style="flex:1"><div class="ht" id="vdh">車両詳細</div><div class="hs" id="vds"></div></div><button class="hb" onclick="toast('編集機能は今後実装予定です')"><i class="ti ti-edit"></i></button></div>
+    <div class="trow" id="vdtabs"><div class="tb on" onclick="vdT('o',this)">概要</div><div class="tb" onclick="vdT('f',this)">給油</div><div class="tb" onclick="vdT('m',this)">整備</div><div class="tb" onclick="vdT('h',this)">履歴</div></div>
+  </div>
+  <div class="bd">
+    <div class="gp" id="vdo"><div class="kg" id="vdk"></div><div class="ca" id="vdi"></div><div class="ca" id="vdmp"></div></div>
+    <div class="gp" id="vdf" style="display:none"><div class="es"><i class="ti ti-gas-station"></i><p>給油記録がありません</p><button class="bp" style="width:auto;padding:9px 18px;margin-top:12px;font-size:14px" onclick="go('sf')">給油を記録する</button></div></div>
+    <div class="gp" id="vdm" style="display:none"><div class="ca" id="vdmlist"></div></div>
+    <div class="gp" id="vdh2" style="display:none"><div id="vdhc"><div class="es"><i class="ti ti-clipboard-list"></i><p>まだ記録がありません</p></div></div></div>
+  </div>
+  <button class="fab" onclick="fabVD()"><i class="ti ti-plus"></i></button>
+</div>
+
+<!-- FUEL -->
+<div class="sc" id="sf">
+  <div class="hd"><div class="hr"><button class="hb" onclick="goBack()"><i class="ti ti-arrow-left"></i></button><div><div class="ht">給油を記録</div><div class="hs" id="fvn">車両を選択してください</div></div></div></div>
+  <div class="bd gp">
+    <div class="ca"><p class="ct">対象車両</p><div class="fl"><select id="fvs" onchange="updFv()"><option value="">車両を選択...</option></select></div></div>
+    <div class="ca"><p class="ct"><i class="ti ti-receipt" style="margin-right:3px"></i>レシート読み取り</p>
+      <div class="rz" id="rz" onclick="document.getElementById('ri').click()"><i class="ti ti-camera"></i><p>タップして撮影 / 選択<br><span style="font-size:11px;opacity:.7">撮影で金額・給油量を自動入力</span></p></div>
+      <div class="rbs"><button class="rb2" onclick="document.getElementById('ri').click()"><i class="ti ti-camera"></i>カメラ</button><button class="rb2" onclick="document.getElementById('rg').click()"><i class="ti ti-photo"></i>ライブラリ</button></div>
+      <input type="file" id="ri" accept="image/*" capture="environment" style="display:none" onchange="doReceipt(this)">
+      <input type="file" id="rg" accept="image/*" style="display:none" onchange="doReceipt(this)">
+      <div id="rp" style="position:relative;display:none;margin-top:10px"><img id="rpi" style="width:100%;border-radius:var(--rs);max-height:150px;object-fit:cover"><button onclick="clrR()" style="position:absolute;top:7px;right:7px;width:26px;height:26px;border-radius:50%;background:rgba(0,0,0,.5);border:none;color:#fff;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center"><i class="ti ti-x"></i></button></div>
+      <div id="rsc" style="display:none;align-items:center;gap:9px;background:var(--bll);border-radius:var(--rs);padding:10px;margin-top:9px"><div class="sp2"></div><p style="font-size:13px;color:var(--bld)">読み取り中...</p></div>
+      <div id="rdn" style="display:none;align-items:center;gap:7px;background:#EAF3DE;border-radius:var(--rs);padding:9px;margin-top:8px;font-size:13px;color:#3B6D11"><i class="ti ti-check"></i><span>読み取り完了！数値をご確認ください</span></div>
+    </div>
+    <div class="ca"><p class="ct">基本情報</p>
+      <div class="fl"><label>日付<span class="rq">*</span></label><input type="date" id="fd"></div>
+      <div class="fr"><div class="fl"><label>給油量(L)<span class="rq">*</span></label><input type="number" id="fl2" placeholder="15.0" step="0.1" oninput="fCalc()"></div><div class="fl"><label>単価(円/L)</label><input type="number" id="fp" placeholder="175" oninput="fCalc()"></div></div>
+      <div class="fl"><label>合計金額(円)</label><input type="number" id="ft" placeholder="自動計算" oninput="fCalcR()"><p class="hn">給油量×単価で自動計算。直接入力も可</p></div>
+      <label style="display:flex;align-items:center;gap:9px;padding-top:7px;cursor:pointer"><input type="checkbox" id="ff" checked style="width:19px;height:19px;accent-color:var(--bl)"><span style="font-size:14px;color:var(--tx)">満タン給油</span></label>
+    </div>
+    <div class="ca"><p class="ct">走行距離</p>
+      <div class="fr"><div class="fl"><label>現在オドメーター(km)</label><input type="number" id="fo" placeholder="14380" oninput="fKmpl()"></div><div class="fl"><label>前回給油時(km)</label><input type="number" id="fpv" placeholder="前回の値" oninput="fKmpl()"></div></div>
+      <div class="cb"><span class="cl"><i class="ti ti-leaf" style="margin-right:3px"></i>今回の燃費</span><span><span class="cv" id="fkv">—</span><span class="cu">km/L</span></span></div>
+    </div>
+    <div class="ca"><p class="ct">給油場所(任意)</p>
+      <div class="fl"><label>スタンド名</label><input id="fst" placeholder="例: ENEOS ○○店"></div>
+      <div class="fl"><label>燃料種別</label><select id="fft"><option value="regular">レギュラー</option><option value="premium">ハイオク</option><option value="diesel">軽油</option></select></div>
+    </div>
+    <div class="ca"><p class="ct">メモ(任意)</p><div class="fl"><textarea id="fm" placeholder="特記事項など..."></textarea></div></div>
+    <button class="bp" onclick="saveF()"><i class="ti ti-check"></i>給油を保存する</button>
+  </div>
+</div>
+
+<!-- MAINTENANCE -->
+<div class="sc" id="sm">
+  <div class="hd"><div class="hr"><button class="hb" onclick="goBack()"><i class="ti ti-arrow-left"></i></button><div><div class="ht">整備を記録</div><div class="hs" id="mvn"></div></div></div></div>
+  <div class="bd gp">
+    <div class="ca"><p class="ct">対象車両</p><div class="fl"><select id="mvs" onchange="updMv()"><option value="">車両を選択...</option></select></div></div>
+    <div class="ca"><p class="ct">整備カテゴリ</p><div class="cg" id="cg">
+      <div class="cb2 on" data-c="oil" onclick="selC(this)"><i class="ti ti-oil"></i><span>オイル交換</span></div>
+      <div class="cb2" data-c="tire" onclick="selC(this)"><i class="ti ti-circle"></i><span>タイヤ</span></div>
+      <div class="cb2" data-c="brake" onclick="selC(this)"><i class="ti ti-brake"></i><span>ブレーキ</span></div>
+      <div class="cb2" data-c="chain" onclick="selC(this)"><i class="ti ti-link"></i><span>チェーン</span></div>
+      <div class="cb2" data-c="filter" onclick="selC(this)"><i class="ti ti-filter"></i><span>フィルター</span></div>
+      <div class="cb2" data-c="elec" onclick="selC(this)"><i class="ti ti-bolt"></i><span>電装系</span></div>
+      <div class="cb2" data-c="wash" onclick="selC(this)"><i class="ti ti-droplet"></i><span>洗車</span></div>
+      <div class="cb2" data-c="inspect" onclick="selC(this)"><i class="ti ti-clipboard-check"></i><span>点検・車検</span></div>
+      <div class="cb2" data-c="other" onclick="selC(this)"><i class="ti ti-tool"></i><span>その他</span></div>
+    </div></div>
+    <div class="ca"><p class="ct">基本情報</p>
+      <div class="fl"><label>整備内容<span class="rq">*</span></label><input id="mt" placeholder="例: エンジンオイル交換"></div>
+      <div class="fr"><div class="fl"><label>実施日<span class="rq">*</span></label><input type="date" id="md2"></div><div class="fl"><label>走行距離(km)</label><input type="number" id="mo" placeholder="14000" min="0"></div></div>
+      <div class="fl"><label>実施場所</label><select id="ms"><option value="self">自分で作業(DIY)</option><option value="dealer">ディーラー</option><option value="shop">バイクショップ</option><option value="gs">ガソリンスタンド</option></select></div>
+      <div class="fl"><label>店舗名/場所</label><input id="msh" placeholder="例: ○○モータース"></div>
+    </div>
+    <div class="ca"><p class="ct">使用部品・費用</p>
+      <div id="mpl"><div class="pr"><input placeholder="部品名(例: Mobil1 10W-40)" oninput="calcP()"><input type="number" class="pi" placeholder="金額(円)" min="0" oninput="calcP()"><button class="pd" onclick="delP(this)"><i class="ti ti-trash"></i></button></div></div>
+      <button class="ap" onclick="addP()"><i class="ti ti-plus"></i>部品を追加</button>
+      <div class="cb" style="margin-top:10px"><span class="cl"><i class="ti ti-receipt" style="margin-right:3px"></i>合計費用</span><span style="font-size:19px;font-weight:700;color:var(--bl)">¥<span id="ptot">0</span></span></div>
+    </div>
+    <div class="ca"><p class="ct">次回メンテナンス予定</p>
+      <div class="n3"><div class="fl" style="margin:0"><label>次回予定日</label><input type="date" id="mnd"></div><div class="ol">または</div><div class="fl" style="margin:0"><label>次回予定距離(km)</label><input type="number" id="mno" placeholder="17000" min="0"></div></div>
+      <div class="nh"><i class="ti ti-bell"></i><span>ここで入力した予定日・予定距離をもとに、ホーム画面と車両詳細でアラート表示されます</span></div>
+    </div>
+    <div class="ca"><p class="ct">作業写真(任意)</p>
+      <div class="ph" id="phr"><div class="pa" onclick="document.getElementById('phi').click()"><i class="ti ti-camera"></i><span>追加</span></div></div>
+      <input type="file" id="phi" accept="image/*" multiple style="display:none" onchange="addPh(this)">
+    </div>
+    <div class="ca"><p class="ct">メモ(任意)</p><div class="fl"><textarea id="mme" placeholder="作業詳細、次回への申し送りなど..."></textarea></div></div>
+    <button class="bp" onclick="saveM()"><i class="ti ti-check"></i>整備記録を保存する</button>
+  </div>
+</div>
+
+<!-- DISTANCE -->
+<div class="sc" id="sdi">
+  <div class="hd"><div class="hr"><button class="hb" onclick="goBack()"><i class="ti ti-arrow-left"></i></button><div><div class="ht">走行を記録</div><div class="hs" id="dvn"></div></div></div></div>
+  <div class="bd gp">
+    <div class="ca"><p class="ct">対象車両</p><div class="fl"><select id="dvs" onchange="updDv()"><option value="">車両を選択...</option></select></div></div>
+    <div class="ca"><p class="ct">走行情報</p>
+      <div class="fl"><label>日付<span class="rq">*</span></label><input type="date" id="dd"></div>
+      <div class="fr"><div class="fl"><label>出発オドメーター(km)</label><input type="number" id="ds" placeholder="14000" min="0" oninput="calcD()"></div><div class="fl"><label>到着オドメーター(km)</label><input type="number" id="de" placeholder="14320" min="0" oninput="calcD()"></div></div>
+      <div class="cb"><span class="cl"><i class="ti ti-road" style="margin-right:3px"></i>今回の走行距離</span><span><span class="cv" id="dkv">—</span><span class="cu">km</span></span></div>
+    </div>
+    <div class="ca">
+      <div class="fl"><label>目的/タイトル</label><input id="dt2" placeholder="例: ツーリング、通勤"></div>
+      <div class="fl"><label>走行エリア</label><input id="da" placeholder="例: 鳥取〜島根 日本海ルート"></div>
+      <div class="fr"><div class="fl"><label>天気</label><select id="dw"><option value="">選択</option><option>☀️晴れ</option><option>⛅曇り</option><option>🌧️雨</option><option>❄️雪</option></select></div><div class="fl"><label>道路状況</label><select id="dr"><option value="">選択</option><option>一般道</option><option>高速道路</option><option>山道・林道</option><option>混合</option></select></div></div>
+    </div>
+    <div class="ca"><p class="ct">メモ(任意)</p><div class="fl"><textarea id="dm" placeholder="ルートの感想など..."></textarea></div></div>
+    <button class="bp" onclick="saveDi()"><i class="ti ti-check"></i>走行記録を保存する</button>
+  </div>
+</div>
+
+<!-- PARTS -->
+<div class="sc" id="sp">
+  <div class="hd" style="padding-bottom:13px"><div class="hr" style="margin-bottom:0"><span class="ht"><i class="ti ti-package" style="font-size:16px;margin-right:5px;vertical-align:-2px"></i>部品管理</span><button class="hb" onclick="openAP()"><i class="ti ti-plus"></i></button></div></div>
+  <div class="bd">
+    <div class="pf" id="pfilt"></div>
+    <div class="ca" style="margin-bottom:10px"><p class="ct">在庫サマリー</p><div class="kg" id="pkpi"></div></div>
+    <div class="ca"><p class="ct">部品一覧</p><div id="plst"></div></div>
+    <button class="bp" style="margin-top:10px" onclick="openAP()"><i class="ti ti-plus"></i>部品を追加する</button>
+  </div>
+</div>
+
+<!-- SETTINGS -->
+<div class="sc" id="ss">
+  <div class="hd" style="padding-bottom:13px"><div class="hr" style="margin-bottom:0"><span class="ht"><i class="ti ti-settings" style="font-size:16px;margin-right:5px;vertical-align:-2px"></i>設定</span></div></div>
+  <div class="bd gp">
+    <div class="ca" style="display:flex;align-items:center;gap:12px">
+      <div style="width:48px;height:48px;border-radius:50%;background:var(--bll);display:flex;align-items:center;justify-content:center;font-size:24px;color:var(--bl)"><i class="ti ti-user"></i></div>
+      <div><div style="font-size:16px;font-weight:600;color:var(--tx)" id="svc">車両 0台</div><div style="font-size:12px;color:var(--t2);margin-top:1px">車両管理アプリ v1.0</div></div>
+    </div>
+    <div><p class="sl2">データ管理（端末間移行）</p><div class="ca">
+      <div class="sr" onclick="exportJSON()"><div class="si" style="background:var(--bll);color:var(--bl)"><i class="ti ti-download"></i></div><div class="st"><div class="stt">JSONバックアップ</div><div class="ss">全データ保存 → 別端末でインポート可</div></div><i class="ti ti-chevron-right" style="color:var(--t2)"></i></div>
+      <div class="sr" onclick="document.getElementById('jsonImp').click()"><div class="si" style="background:var(--gnl);color:var(--gn)"><i class="ti ti-upload"></i></div><div class="st"><div class="stt">JSONインポート</div><div class="ss">バックアップから復元</div></div><i class="ti ti-chevron-right" style="color:var(--t2)"></i></div>
+      <input type="file" id="jsonImp" accept=".json" style="display:none" onchange="importJSON(this.files[0])">
+      <div class="sr" onclick="exportCSV()"><div class="si" style="background:var(--bll);color:var(--bl)"><i class="ti ti-table"></i></div><div class="st"><div class="stt">CSVエクスポート</div><div class="ss">表計算ソフトで開ける形式</div></div><i class="ti ti-chevron-right" style="color:var(--t2)"></i></div>
+      <div class="sr" style="cursor:default"><div class="si" style="background:var(--bll);color:var(--bl)"><i class="ti ti-device-floppy"></i></div><div class="st"><div class="stt">データ保存</div><div class="ss">この端末・このブラウザに自動保存中</div></div><span style="font-size:11px;background:#EAF3DE;color:#3B6D11;padding:2px 8px;border-radius:99px">有効</span></div>
+    </div></div>
+    <div><p class="sl2">表示・テーマ</p><div class="ca">
+      <div class="sr" style="cursor:default"><div class="si" style="background:var(--bll);color:var(--bl)"><i class="ti ti-palette"></i></div><div class="st"><div class="stt">カラーテーマ</div></div>
+        <div style="display:flex;gap:7px">
+          <div class="sw on" style="background:#185FA5" onclick="selCol(this,'#185FA5','#E6F1FB','#0C447C')"><i class="ti ti-check"></i></div>
+          <div class="sw" style="background:#1D9E75" onclick="selCol(this,'#1D9E75','#E1F5EE','#0F5C44')"></div>
+          <div class="sw" style="background:#7B4FC5" onclick="selCol(this,'#7B4FC5','#F0EBFF','#4A2980')"></div>
+          <div class="sw" style="background:#C0392B" onclick="selCol(this,'#C0392B','#FDE8E6','#7B1A12')"></div>
+        </div>
+      </div>
+      <div class="sr"><div class="si" style="background:#F0F0F0;color:#555"><i class="ti ti-moon"></i></div><div class="st"><div class="stt">ダークモード</div></div><label class="tgl"><input type="checkbox" id="dkt" onchange="document.getElementById('app').classList.toggle('dk',this.checked)"><span class="sl"></span></label></div>
+    </div></div>
+    <div><p class="sl2">通知</p><div class="ca">
+      <div class="sr"><div class="si" style="background:var(--bll);color:var(--bl)"><i class="ti ti-bell"></i></div><div class="st"><div class="stt">メンテナンス通知</div><div class="ss">整備時期が近づくとホーム画面にアラート表示</div></div><label class="tgl"><input type="checkbox" id="ntMaint" checked onchange="saveNotifyPrefs();renderHome()"><span class="sl"></span></label></div>
+      <div class="sr"><div class="si" style="background:var(--gnl);color:var(--gn)"><i class="ti ti-gas-station"></i></div><div class="st"><div class="stt">給油リマインダー</div><div class="ss">残量が少なくなったら通知</div></div><label class="tgl"><input type="checkbox" checked><span class="sl"></span></label></div>
+      <div class="sr"><div class="si" style="background:var(--orl);color:var(--or)"><i class="ti ti-package"></i></div><div class="st"><div class="stt">部品在庫アラート</div><div class="ss">在庫が最低数を下回ると通知</div></div><label class="tgl"><input type="checkbox" checked><span class="sl"></span></label></div>
+      <div class="fl" style="padding-top:9px"><label>通知するタイミング</label><select id="ntWindow" onchange="saveNotifyPrefs();renderHome()">
+        <option value="7">期限の7日前 / 150km前から</option>
+        <option value="14" selected>期限の14日前 / 300km前から</option>
+        <option value="30">期限の30日前 / 500km前から</option>
+      </select></div>
+    </div></div>
+    <div><p class="sl2">その他</p><div class="ca">
+      <div class="sr" onclick="document.getElementById('delmod').classList.add('on')"><div class="si" style="background:var(--rdl);color:var(--rd)"><i class="ti ti-trash"></i></div><div class="st"><div class="stt" style="color:var(--rd)">全データを削除</div><div class="ss">この操作は取り消せません</div></div><i class="ti ti-chevron-right" style="color:var(--t2)"></i></div>
+    </div></div>
+  </div>
+</div>
+
+<!-- MODAL: 部品追加 -->
+<div class="ov" id="apmod">
+  <div class="md">
+    <div class="mdt">部品を追加</div>
+    <div class="fl"><label>部品名<span class="rq">*</span></label><input id="apn" placeholder="例: エンジンオイル Mobil1 10W-40"></div>
+    <div class="fl"><label>適用車両</label><select id="apv"><option value="common">共通（全車両）</option></select></div>
+    <div class="fl"><label>カテゴリ</label><select id="apc"><option value="oil">オイル類</option><option value="tire">タイヤ・ホイール</option><option value="brake">ブレーキ</option><option value="chain">チェーン・駆動系</option><option value="filter">フィルター類</option><option value="elec">電装・バッテリー</option><option value="body">外装・ボディ</option><option value="consumable">消耗品</option><option value="other">その他</option></select></div>
+    <div class="fr"><div class="fl"><label>在庫数<span class="rq">*</span></label><input type="number" id="aps" value="0" min="0"></div><div class="fl"><label>単位</label><input id="apu" value="個" placeholder="個、本、L"></div></div>
+    <div class="fr"><div class="fl"><label>アラート数（最低）</label><input type="number" id="apm" value="1" min="0"><p class="hn">この数を下回ったら警告</p></div><div class="fl"><label>単価（円）</label><input type="number" id="app2" placeholder="2500" min="0"></div></div>
+    <div class="fl"><label>購入先・メーカー</label><input id="apk" placeholder="例: Amazon、オートバックス"></div>
+    <div class="fl"><label>メモ</label><input id="apmemo" placeholder="例: 交換サイクル 3000km"></div>
+    <div class="ma"><button class="bs" onclick="closeOv('apmod')">キャンセル</button><button class="bp" onclick="saveP()"><i class="ti ti-check"></i>追加する</button></div>
+  </div>
+</div>
+
+<!-- MODAL: 削除確認 -->
+<div class="ov" id="delmod">
+  <div class="md">
+    <div class="mdt">⚠️ 全データを削除しますか？</div>
+    <p style="font-size:14px;color:var(--t2);line-height:1.6">登録した全車両・給油記録・整備記録・部品情報が削除されます。この操作は取り消せません。</p>
+    <div class="ma"><button class="bs" onclick="closeOv('delmod')">キャンセル</button><button class="bp" style="background:var(--rd)" onclick="doDelete()"><i class="ti ti-trash"></i>削除する</button></div>
+  </div>
+</div>
+</div>
+
+<script>
+// ── DB ──
+const DB_KEY='vmDB_v2',DEF={v:[],f:[],m:[],d:[],p:[]};
+const NP_KEY='vmNotifyPrefs_v1';
+function loadDB(){try{const r=localStorage.getItem(DB_KEY);if(r)return JSON.parse(r)}catch(e){}return JSON.parse(JSON.stringify(DEF))}
+function saveDB(){try{localStorage.setItem(DB_KEY,JSON.stringify(DB))}catch(e){toast('⚠️保存失敗')}}
+let DB=loadDB();
+function loadNP(){try{const r=localStorage.getItem(NP_KEY);if(r)return JSON.parse(r)}catch(e){}return{maintOn:true,window:14}}
+function saveNotifyPrefs(){NP.maintOn=document.getElementById('ntMaint').checked;NP.window=parseInt(document.getElementById('ntWindow').value)||14;try{localStorage.setItem(NP_KEY,JSON.stringify(NP))}catch(e){}}
+let NP=loadNP();
+
+// ── 定数 ──
+const TI={car:'ti-car',bike:'ti-motorbike',truck:'ti-truck',other:'ti-car-suv'};
+const TC={car:'var(--bll)',bike:'var(--orl)',truck:'var(--gnl)',other:'var(--pul)'};
+const TIC={car:'var(--bl)',bike:'var(--or)',truck:'var(--gn)',other:'var(--pu)'};
+const FL={regular:'レギュラー',premium:'ハイオク',diesel:'軽油',hybrid:'ハイブリッド',ev:'電気EV','':''};
+const CI={oil:'ti-oil',tire:'ti-circle',brake:'ti-brake',chain:'ti-link',filter:'ti-filter',elec:'ti-bolt',body:'ti-car',consumable:'ti-package',other:'ti-tool',wash:'ti-droplet',inspect:'ti-clipboard-check'};
+const CL={oil:'オイル交換',tire:'タイヤ',brake:'ブレーキ',chain:'チェーン',filter:'フィルター',elec:'電装',body:'外装',consumable:'消耗品',other:'その他',wash:'洗車',inspect:'点検・車検'};
+const NM={sh:'n0',sf:'n1',svd:'n2',sav:'n2',sm:'n2',sdi:'n2',sp:'n3',ss:'n4'};
+const VDM={o:'vdo',f:'vdf',m:'vdm',h:'vdh2'};
+let CID=null,PREV='sh',PF='all',VDC='o';
+
+// ── ユーティリティ ──
+function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,5)}
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
+function vN(id){const v=DB.v.find(x=>x.id===id);return v?v.maker+' '+v.model:'不明'}
+function fmtD(s){if(!s)return'';const d=new Date(s),t=new Date(),df=Math.floor((t-d)/86400000);if(df===0)return'今日';if(df===1)return'昨日';if(df<7)return df+'日前';if(df<30)return Math.floor(df/7)+'週前';return(d.getMonth()+1)+'/'+(d.getDate())}
+function toast(msg){const el=document.getElementById('toast');el.textContent=msg;el.classList.add('on');setTimeout(()=>el.classList.remove('on'),2400)}
+function ir(l,v){return`<div class="ir"><span class="il">${l}</span><span class="iv">${esc(String(v))}</span></div>`}
+
+// ── メンテナンスアラート判定 ──
+function todayStr(){return new Date().toISOString().slice(0,10)}
+function daysUntil(dateStr){if(!dateStr)return null;const d=new Date(dateStr+'T00:00:00'),t=new Date(todayStr()+'T00:00:00');return Math.round((d-t)/86400000)}
+function latestByVidCat(){
+  const map={};
+  DB.m.forEach(r=>{if(!r.nd&&!r.no)return;const key=r.vid+'|'+r.cat;if(!map[key]||map[key].date<r.date)map[key]=r});
+  return map;
+}
+function calcMStatus(rec,vehicleOdo){
+  const win=NP.window||14,winKm=win*(300/14); // km側は日数比率で近似スケール
+  let odoRemain=null,dayRemain=null;
+  if(rec.no)odoRemain=Number(rec.no)-vehicleOdo;
+  if(rec.nd)dayRemain=daysUntil(rec.nd);
+  let status='ok';
+  if((odoRemain!==null&&odoRemain<=0)||(dayRemain!==null&&dayRemain<0))status='overdue';
+  else if((odoRemain!==null&&odoRemain<=winKm)||(dayRemain!==null&&dayRemain<=win))status='soon';
+  if(odoRemain===null&&dayRemain===null)status='none';
+  return{status,odoRemain,dayRemain};
+}
+function buildAlerts(){
+  if(!NP.maintOn)return[];
+  const map=latestByVidCat(),arr=[];
+  Object.values(map).forEach(r=>{
+    const v=DB.v.find(x=>x.id===r.vid);if(!v)return;
+    const st=calcMStatus(r,v.odo);
+    if(st.status==='overdue'||st.status==='soon')arr.push({...st,rec:r,vehicle:v});
+  });
+  arr.sort((a,b)=>{
+    if(a.status!==b.status)return a.status==='overdue'?-1:1;
+    const av=Math.min(a.dayRemain??Infinity,a.odoRemain??Infinity),bv=Math.min(b.dayRemain??Infinity,b.odoRemain??Infinity);
+    return av-bv;
+  });
+  return arr;
+}
+function alertRemainText(a){
+  if(a.status==='overdue'){
+    const p=[];
+    if(a.dayRemain!==null&&a.dayRemain<0)p.push(Math.abs(a.dayRemain)+'日超過');
+    if(a.odoRemain!==null&&a.odoRemain<=0)p.push(Math.abs(a.odoRemain).toLocaleString()+'km超過');
+    return p.join(' / ')||'期限を過ぎています';
+  }
+  const p=[];
+  if(a.dayRemain!==null&&a.dayRemain>=0)p.push('あと'+a.dayRemain+'日');
+  if(a.odoRemain!==null&&a.odoRemain>0)p.push('あと'+a.odoRemain.toLocaleString()+'km');
+  return p.join(' / ');
+}
+
+// ── 画面遷移 ──
+function go(id){
+  PREV=document.querySelector('.sc.on')?.id||'sh';
+  document.querySelectorAll('.sc').forEach(s=>s.classList.remove('on'));
+  document.getElementById(id)?.classList.add('on');
+  window.scrollTo(0,0);
+  document.querySelectorAll('.ni').forEach(n=>n.classList.remove('on'));
+  const nid=NM[id];if(nid)document.getElementById(nid)?.classList.add('on');
+  if(id==='sh')renderHome();
+  if(id==='sp')renderParts();
+  if(id==='sg'){popGraphSel();renderGraphs()}
+  if(id==='ss'){
+    const el=document.getElementById('svc');if(el)el.textContent='車両 '+DB.v.length+'台・部品 '+DB.p.length+'点';
+    document.getElementById('ntMaint').checked=NP.maintOn;document.getElementById('ntWindow').value=String(NP.window);
+  }
+}
+function goBack(){go(PREV)}
+function goV(){if(!DB.v.length){go('sav');return}if(DB.v.length===1){openV(DB.v[0].id);return}go('sh')}
+function closeOv(id){document.getElementById(id).classList.remove('on')}
+function selT(el){document.querySelectorAll('#tg .tb2').forEach(b=>b.classList.remove('on'));el.classList.add('on')}
+function selC(el){document.querySelectorAll('#cg .cb2').forEach(b=>b.classList.remove('on'));el.classList.add('on')}
+function selCol(el,c,l,d){document.querySelectorAll('.sw').forEach(s=>{s.classList.remove('on');s.innerHTML=''});el.classList.add('on');el.innerHTML='<i class="ti ti-check"></i>';document.documentElement.style.setProperty('--bl',c);document.documentElement.style.setProperty('--bll',l);document.documentElement.style.setProperty('--bld',d)}
+function popSels(sel){
+  const opts='<option value="">車両を選択...</option>'+DB.v.map(v=>`<option value="${v.id}"${v.id===sel?' selected':''}>${esc(v.maker)} ${esc(v.model)}</option>`).join('');
+  ['fvs','mvs','dvs'].forEach(id=>{const el=document.getElementById(id);if(el)el.innerHTML=opts});
+  updFv();updMv();updDv();
+}
+
+// ── ホーム ──
+function renderHome(){
+  document.getElementById('vlist').innerHTML=!DB.v.length
+    ?'<div class="es"><i class="ti ti-car"></i><p>車両が登録されていません</p><p class="sb">＋ボタンから追加しましょう</p></div>'
+    :DB.v.map(v=>`<div class="vc" onclick="openV('${v.id}')"><div class="vi" style="background:${TC[v.type]};color:${TIC[v.type]}"><i class="ti ${TI[v.type]}"></i></div><div style="flex:1;min-width:0"><div class="vn">${esc(v.maker)} ${esc(v.model)}</div><div class="vm">${v.odo.toLocaleString()} km${v.year?' · '+v.year+'年式':''}${v.fuel?' · '+FL[v.fuel]:''}</div><div style="margin-top:4px"><span class="bge nw">登録済み</span></div></div><i class="ti ti-chevron-right" style="color:var(--t2);font-size:17px"></i></div>`).join('');
+
+  const alerts=buildAlerts();
+  const aw=document.getElementById('halert-wrap');
+  const hasOverdue=alerts.some(a=>a.status==='overdue');
+  document.getElementById('ndotHome').style.display=alerts.length?'block':'none';
+  aw.innerHTML=!alerts.length?'':'<p class="sl2">⚠️ メンテナンスアラート</p><div class="ca">'+alerts.map(a=>{
+    const badge=a.status==='overdue'?'<span class="bge lw">期限超過</span>':'<span class="bge wn">そろそろ</span>';
+    return`<div class="ri" onclick="openV('${a.vehicle.id}')" style="cursor:pointer"><div class="ic iw"><i class="ti ${CI[a.rec.cat]||'ti-tool'}"></i></div><div class="rb"><div class="rt">${esc(a.vehicle.maker)} ${esc(a.vehicle.model)} — ${esc(CL[a.rec.cat]||a.rec.title)}</div><div class="rd2">${esc(alertRemainText(a))}</div></div>${badge}</div>`;
+  }).join('')+'</div>';
+
+  const IM={f:'if2 ti-gas-station',m:'im ti-tool',d:'id2 ti-road'};
+  const all=[...DB.f.map(x=>({date:x.date,type:'f',title:'給油 — '+vN(x.vid),detail:x.l+'L · ¥'+Number(x.tot).toLocaleString()+(x.kp?' · '+x.kp+'km/L':'')})),...DB.m.map(x=>({date:x.date,type:'m',title:esc(x.title)+' — '+vN(x.vid),detail:'¥'+Number(x.cost).toLocaleString()})),...DB.d.map(x=>({date:x.date,type:'d',title:(x.title||'走行記録')+' — '+vN(x.vid),detail:Number(x.km).toLocaleString()+'km走行'}))].sort((a,b)=>b.date.localeCompare(a.date)).slice(0,5);
+  document.getElementById('rlist').innerHTML=!all.length?'<div class="ca"><div class="es" style="padding:16px 0"><i class="ti ti-clipboard-list"></i><p>まだ記録がありません</p></div></div>':'<div class="ca">'+all.map(r=>{const[ic,ico]=IM[r.type].split(' ');return`<div class="ri"><div class="ic ${ic}"><i class="ti ${ico}"></i></div><div class="rb"><div class="rt">${r.title}</div><div class="rd2">${r.detail}</div></div><div class="dt">${fmtD(r.date)}</div></div>`}).join('')+'</div>';
+  const ym=new Date().toISOString().slice(0,7),mf=DB.f.filter(x=>x.date.startsWith(ym)),km=DB.d.filter(x=>x.date.startsWith(ym)).reduce((s,x)=>s+(x.km||0),0),fc=mf.reduce((s,x)=>s+Number(x.tot||0),0),ka=mf.filter(x=>x.kp).map(x=>Number(x.kp)),avg=ka.length?(ka.reduce((a,b)=>a+b,0)/ka.length).toFixed(1):'—';
+  document.getElementById('hkpi').innerHTML=`<div class="ki"><div class="kl">月間走行距離</div><div class="kv">${km?km.toLocaleString():'—'}<span class="ku">${km?'km':''}</span></div></div><div class="ki"><div class="kl">給油合計</div><div class="kv">${fc?'¥'+fc.toLocaleString():'—'}</div></div><div class="ki"><div class="kl">整備件数</div><div class="kv">${DB.m.filter(x=>x.date.startsWith(ym)).length}<span class="ku">件</span></div></div><div class="ki"><div class="kl">平均燃費</div><div class="kv">${avg}<span class="ku">${avg!=='—'?'km/L':''}</span></div></div>`;
+}
+
+// ── 車両詳細 ──
+function openV(id){
+  CID=id;const v=DB.v.find(x=>x.id===id);if(!v)return;
+  document.getElementById('vdh').innerHTML=`<i class="ti ${TI[v.type]}" style="font-size:16px;margin-right:5px;vertical-align:-2px"></i>${esc(v.maker)} ${esc(v.model)}`;
+  document.getElementById('vds').textContent=[v.year?v.year+'年式':'',FL[v.fuel]||'',v.odo.toLocaleString()+'km'].filter(Boolean).join(' · ');
+  const vf=DB.f.filter(x=>x.vid===id),vm=DB.m.filter(x=>x.vid===id),ka=vf.filter(x=>x.kp).map(x=>Number(x.kp)),avg=ka.length?(ka.reduce((a,b)=>a+b,0)/ka.length).toFixed(1):'—';
+  document.getElementById('vdk').innerHTML=`<div class="ki"><div class="kl">走行距離</div><div class="kv">${v.odo.toLocaleString()}<span class="ku">km</span></div></div><div class="ki"><div class="kl">平均燃費</div><div class="kv">${avg}<span class="ku">${avg!=='—'?'km/L':''}</span></div></div><div class="ki"><div class="kl">給油回数</div><div class="kv">${vf.length}<span class="ku">回</span></div></div><div class="ki"><div class="kl">整備記録</div><div class="kv">${vm.length}<span class="ku">件</span></div></div>`;
+  document.getElementById('vdi').innerHTML='<p class="ct">車両情報</p>'+ir('メーカー',v.maker)+ir('車種',v.model)+(v.year?ir('年式',v.year+'年'):'')+(v.color?ir('カラー',v.color):'')+(v.plate?ir('ナンバー',v.plate):'')+(v.fuel?ir('燃料',FL[v.fuel]):'')+ir('登録走行距離',v.odo.toLocaleString()+' km');
+
+  // 次回メンテナンス予定カード（アラート連動）
+  const map=latestByVidCat();
+  const vItems=Object.values(map).filter(r=>r.vid===id).map(r=>({rec:r,...calcMStatus(r,v.odo)}));
+  vItems.sort((a,b)=>{const order={overdue:0,soon:1,ok:2,none:3};if(order[a.status]!==order[b.status])return order[a.status]-order[b.status];const av=Math.min(a.dayRemain??Infinity,a.odoRemain??Infinity),bv=Math.min(b.dayRemain??Infinity,b.odoRemain??Infinity);return av-bv});
+  let mpHtml='<p class="ct">次回メンテナンス予定</p>';
+  if(!NP.maintOn){
+    mpHtml+='<div class="mn"><div class="ic im"><i class="ti ti-bell-off"></i></div><div class="mi"><div class="mnm">通知はオフになっています</div><div class="md2">設定画面でオンにできます</div></div></div>';
+  }else if(vItems.length){
+    const top=vItems[0];
+    if(top.status==='overdue'||top.status==='soon'){
+      const badge=top.status==='overdue'?'<span class="bge lw">期限超過</span>':'<span class="bge wn">そろそろ</span>';
+      mpHtml+=`<div class="mn"><div class="ic iw"><i class="ti ${CI[top.rec.cat]||'ti-tool'}"></i></div><div class="mi"><div class="mnm">${esc(CL[top.rec.cat]||top.rec.title)}</div><div class="md2">${esc(alertRemainText(top))}</div></div>${badge}</div>`;
+    }else{
+      mpHtml+=`<div class="mn"><div class="ic if2"><i class="ti ti-check"></i></div><div class="mi"><div class="mnm">メンテナンスは順調です</div><div class="md2">次回: ${esc(CL[top.rec.cat]||top.rec.title)}（${esc(alertRemainText(top))}）</div></div></div>`;
+    }
+  }else if(vm.length){
+    mpHtml+=`<div class="mn"><div class="ic im"><i class="ti ti-check"></i></div><div class="mi"><div class="mnm">整備記録 ${vm.length}件</div><div class="md2">次回予定日/距離を登録するとアラート表示されます</div></div></div>`;
+  }else{
+    mpHtml+='<div class="mn"><div class="ic iw"><i class="ti ti-alert-circle"></i></div><div class="mi"><div class="mnm">まだ記録がありません</div><div class="md2">整備タブから追加しましょう</div></div></div>';
+  }
+  document.getElementById('vdmp').innerHTML=mpHtml;
+
+  const IM2={f:'if2 ti-gas-station',m:'im ti-tool',d:'id2 ti-road'};
+  const allh=[...vf.map(x=>({date:x.date,type:'f',title:'給油',detail:x.l+'L · ¥'+Number(x.tot).toLocaleString()})),...vm.map(x=>({date:x.date,type:'m',title:x.title,detail:'¥'+Number(x.cost).toLocaleString()})),...DB.d.filter(x=>x.vid===id).map(x=>({date:x.date,type:'d',title:x.title||'走行記録',detail:Number(x.km).toLocaleString()+'km'}))].sort((a,b)=>b.date.localeCompare(a.date));
+  document.getElementById('vdhc').innerHTML=!allh.length?'<div class="es"><i class="ti ti-clipboard-list"></i><p>まだ記録がありません</p></div>':allh.map(r=>{const[ic,ico]=IM2[r.type].split(' ');return`<div class="ri"><div class="ic ${ic}"><i class="ti ${ico}"></i></div><div class="rb"><div class="rt">${esc(r.title)}</div><div class="rd2">${r.detail}</div></div><div class="dt">${fmtD(r.date)}</div></div>`}).join('');
+
+  renderVDMaint(id);
+
+  VDC='o';Object.values(VDM).forEach(x=>{const el=document.getElementById(x);if(el)el.style.display='none'});
+  document.getElementById('vdo').style.display='flex';
+  document.querySelectorAll('#vdtabs .tb').forEach((t,i)=>t.classList.toggle('on',i===0));
+  go('svd');
+}
+// 整備タブ：カテゴリごとの最新記録から状態を自動判定して表示
+function renderVDMaint(vid){
+  const v=DB.v.find(x=>x.id===vid);if(!v)return;
+  const recs=DB.m.filter(x=>x.vid===vid);
+  const byCat={};recs.forEach(r=>{if(!byCat[r.cat]||byCat[r.cat].date<r.date)byCat[r.cat]=r});
+  const cats=Object.keys(byCat);
+  let html='<p class="ct">メンテナンス項目</p>';
+  if(!cats.length){
+    html+='<div class="es" style="padding:14px 0"><i class="ti ti-tool"></i><p>まだ整備記録がありません</p></div>';
+  }else{
+    cats.forEach(c=>{
+      const r=byCat[c],st=calcMStatus(r,v.odo);
+      let badge='<span class="bge nw">記録あり</span>';
+      if(st.status==='overdue')badge='<span class="bge lw">期限超過</span>';
+      else if(st.status==='soon')badge='<span class="bge wn">そろそろ</span>';
+      else if(st.status==='ok')badge='<span class="bge ok">OK</span>';
+      let sub=[];
+      if(r.nd)sub.push('次回目安 '+r.nd.replace(/-/g,'/'));
+      if(r.no)sub.push('次回目安 '+Number(r.no).toLocaleString()+'km');
+      if(!sub.length)sub.push('前回: '+r.title+'（'+fmtD(r.date)+'）');
+      html+=`<div class="mn"><div class="ic im"><i class="ti ${CI[c]||'ti-tool'}"></i></div><div class="mi"><div class="mnm">${esc(CL[c]||c)}</div><div class="md2">${esc(sub.join(' / '))}</div></div>${badge}</div>`;
+    });
+  }
+  html+=`<div class="mn" onclick="go('sm')" style="cursor:pointer"><div class="ic im"><i class="ti ti-plus"></i></div><div class="mi"><div class="mnm" style="color:var(--bl)">整備記録を追加する</div></div></div>`;
+  const el=document.getElementById('vdmlist');if(el)el.innerHTML=html;
+}
+function vdT(n,el){document.getElementById(VDM[VDC]).style.display='none';document.getElementById(VDM[n]).style.display='flex';document.querySelectorAll('#vdtabs .tb').forEach(t=>t.classList.remove('on'));el.classList.add('on');VDC=n;if(n==='m'&&CID)renderVDMaint(CID)}
+function fabVD(){const m={o:'sf',f:'sf',m:'sm',h:'sdi'};popSels(CID);go(m[VDC]||'sf')}
+
+// ── 車両登録 ──
+function saveV(){
+  const maker=document.getElementById('am').value.trim(),model=document.getElementById('ao').value.trim(),odo=document.getElementById('ad').value.trim();
+  if(!maker||!model||!odo){toast('⚠️ メーカー・車種・走行距離は必須です');return}
+  const v={id:uid(),type:document.querySelector('#tg .tb2.on')?.dataset.t||'car',maker,model,year:document.getElementById('ay').value||'',color:document.getElementById('ac').value||'',plate:document.getElementById('ap2').value||'',odo:parseInt(odo),fuel:document.getElementById('af').value||'',tank:document.getElementById('at').value||'',memo:document.getElementById('ame').value||''};
+  DB.v.push(v);saveDB();
+  ['am','ao','ay','ac','ap2','ad','at','ame'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('af').value='';
+  document.querySelectorAll('#tg .tb2').forEach((b,i)=>b.classList.toggle('on',i===0));
+  toast('✅ '+maker+' '+model+' を登録しました！');setTimeout(()=>openV(v.id),400);
+}
+
+// ── 給油 ──
+function updFv(){const vid=document.getElementById('fvs')?.value,v=DB.v.find(x=>x.id===vid);document.getElementById('fvn').textContent=v?v.maker+' '+v.model:'車両を選択してください';if(v){const lf=DB.f.filter(x=>x.vid===v.id).sort((a,b)=>b.date.localeCompare(a.date))[0];document.getElementById('fpv').value=lf?lf.odo||v.odo:v.odo}}
+function fCalc(){const l=parseFloat(document.getElementById('fl2').value),p=parseFloat(document.getElementById('fp').value);if(!isNaN(l)&&!isNaN(p))document.getElementById('ft').value=Math.round(l*p);fKmpl()}
+function fCalcR(){const t=parseFloat(document.getElementById('ft').value),l=parseFloat(document.getElementById('fl2').value);if(!isNaN(t)&&!isNaN(l)&&l>0)document.getElementById('fp').value=Math.round(t/l);fKmpl()}
+function fKmpl(){const n=parseFloat(document.getElementById('fo').value),p=parseFloat(document.getElementById('fpv').value),l=parseFloat(document.getElementById('fl2').value);document.getElementById('fkv').textContent=(!isNaN(n)&&!isNaN(p)&&!isNaN(l)&&l>0&&n>p)?((n-p)/l).toFixed(1):'—'}
+function doReceipt(inp){if(!inp.files||!inp.files[0])return;const r=new FileReader();r.onload=e=>{document.getElementById('rpi').src=e.target.result;document.getElementById('rp').style.display='block';document.getElementById('rz').style.display='none';document.getElementById('rsc').style.display='flex';document.getElementById('rdn').style.display='none';setTimeout(()=>{document.getElementById('rsc').style.display='none';document.getElementById('rdn').style.display='flex';if(!document.getElementById('fl2').value)document.getElementById('fl2').value='12.5';if(!document.getElementById('fp').value)document.getElementById('fp').value='175';document.getElementById('ft').value=Math.round(12.5*175);fKmpl()},1800)};r.readAsDataURL(inp.files[0])}
+function clrR(){document.getElementById('rp').style.display='none';document.getElementById('rz').style.display='block';document.getElementById('rdn').style.display='none';document.getElementById('ri').value='';document.getElementById('rg').value=''}
+function saveF(){
+  const vid=document.getElementById('fvs').value,l=document.getElementById('fl2').value,date=document.getElementById('fd').value;
+  if(!vid){toast('⚠️ 車両を選択してください');return}if(!l||!date){toast('⚠️ 日付と給油量は必須です');return}
+  const odo=document.getElementById('fo').value,kp=document.getElementById('fkv').textContent;
+  const rec={id:uid(),vid,date,l:parseFloat(l),ppl:document.getElementById('fp').value,tot:document.getElementById('ft').value,odo:odo?parseInt(odo):null,prev:document.getElementById('fpv').value,kp:kp!=='—'?kp:null,st:document.getElementById('fst').value,ft:document.getElementById('fft').value,memo:document.getElementById('fm').value};
+  DB.f.push(rec);if(odo){const v=DB.v.find(x=>x.id===vid);if(v&&parseInt(odo)>v.odo)v.odo=parseInt(odo)}saveDB();toast('✅ 給油記録を保存しました！');setTimeout(()=>openV(vid),400);
+}
+
+// ── 整備 ──
+function updMv(){const vid=document.getElementById('mvs')?.value,v=DB.v.find(x=>x.id===vid);document.getElementById('mvn').textContent=v?v.maker+' '+v.model:'';if(v)document.getElementById('mo').value=v.odo}
+function addP(){const d=document.createElement('div');d.className='pr';d.innerHTML='<input placeholder="部品名" oninput="calcP()"><input type="number" class="pi" placeholder="金額(円)" min="0" oninput="calcP()"><button class="pd" onclick="delP(this)"><i class="ti ti-trash"></i></button></div>';document.getElementById('mpl').appendChild(d)}
+function delP(btn){const rows=document.querySelectorAll('#mpl .pr');if(rows.length<=1){btn.closest('.pr').querySelectorAll('input').forEach(i=>i.value='');calcP();return}btn.closest('.pr').remove();calcP()}
+function calcP(){let t=0;document.querySelectorAll('#mpl .pi').forEach(i=>{const v=parseFloat(i.value);if(!isNaN(v))t+=v});document.getElementById('ptot').textContent=t.toLocaleString()}
+function addPh(inp){const row=document.getElementById('phr');Array.from(inp.files).forEach(f=>{const r=new FileReader();r.onload=e=>{const img=document.createElement('img');img.src=e.target.result;img.className='pt';row.insertBefore(img,row.querySelector('.pa'))};r.readAsDataURL(f)})}
+function saveM(){
+  const vid=document.getElementById('mvs').value,title=document.getElementById('mt').value.trim(),date=document.getElementById('md2').value;
+  if(!vid){toast('⚠️ 車両を選択してください');return}if(!title||!date){toast('⚠️ 整備内容と日付は必須です');return}
+  const parts=[];document.querySelectorAll('#mpl .pr').forEach(row=>{const n=row.querySelector('input[type=text]')?.value,p=row.querySelector('.pi')?.value;if(n)parts.push({n,p:p||0})});
+  const cost=parts.reduce((s,x)=>s+Number(x.p),0);
+  DB.m.push({id:uid(),vid,date,title,cat:document.querySelector('#cg .cb2.on')?.dataset.c||'other',odo:document.getElementById('mo').value,shopType:document.getElementById('ms').value,shop:document.getElementById('msh').value,parts,cost,nd:document.getElementById('mnd').value,no:document.getElementById('mno').value,memo:document.getElementById('mme').value});
+  saveDB();toast('✅ 「'+title+'」の整備記録を保存しました！');setTimeout(()=>openV(vid),400);
+}
+
+// ── 走行 ──
+function updDv(){const vid=document.getElementById('dvs')?.value,v=DB.v.find(x=>x.id===vid);document.getElementById('dvn').textContent=v?v.maker+' '+v.model:'';if(v)document.getElementById('ds').value=v.odo}
+function calcD(){const s=parseFloat(document.getElementById('ds').value),e=parseFloat(document.getElementById('de').value);document.getElementById('dkv').textContent=(!isNaN(s)&&!isNaN(e)&&e>s)?(e-s).toLocaleString():'—'}
+function saveDi(){
+  const vid=document.getElementById('dvs').value,km=document.getElementById('dkv').textContent,date=document.getElementById('dd').value;
+  if(!vid){toast('⚠️ 車両を選択してください');return}if(km==='—'||!date){toast('⚠️ 日付とオドメーターを入力してください');return}
+  const endo=parseInt(document.getElementById('de').value);
+  const rec={id:uid(),vid,date,start:parseInt(document.getElementById('ds').value),end:endo,km:parseInt(km.replace(/,/g,'')),title:document.getElementById('dt2').value,area:document.getElementById('da').value,weather:document.getElementById('dw').value,road:document.getElementById('dr').value,memo:document.getElementById('dm').value};
+  DB.d.push(rec);const v=DB.v.find(x=>x.id===vid);if(v&&endo>v.odo)v.odo=endo;saveDB();toast('✅ 走行記録（'+rec.km.toLocaleString()+'km）を保存しました！');setTimeout(()=>openV(vid),400);
+}
+
+// ── 部品 ──
+function renderParts(){
+  const flt=document.getElementById('pfilt');
+  flt.innerHTML=[`<button class="fb${PF==='all'?' on':''}" data-s="all" onclick="filtP(this)">すべて</button>`,`<button class="fb${PF==='common'?' on':''}" data-s="common" onclick="filtP(this)">共通</button>`,...DB.v.map(v=>`<button class="fb${PF===v.id?' on':''}" data-s="${v.id}" onclick="filtP(this)">${esc(v.maker)} ${esc(v.model)}</button>`)].join('');
+  const tot=DB.p.length,lw=DB.p.filter(x=>x.s<=x.mn&&x.s>0).length,ot=DB.p.filter(x=>x.s===0).length;
+  document.getElementById('pkpi').innerHTML=`<div class="ki"><div class="kl">登録部品</div><div class="kv">${tot}<span class="ku">点</span></div></div><div class="ki"><div class="kl">在庫あり</div><div class="kv" style="color:var(--gn)">${tot-lw-ot}<span class="ku">点</span></div></div><div class="ki"><div class="kl">残少（要補充）</div><div class="kv" style="color:var(--or)">${lw}<span class="ku">点</span></div></div><div class="ki"><div class="kl">在庫切れ</div><div class="kv" style="color:var(--rd)">${ot}<span class="ku">点</span></div></div>`;
+  const list=DB.p.filter(x=>PF==='all'||(PF==='common'?x.vid==='common':x.vid===PF));
+  const el=document.getElementById('plst');
+  if(!list.length){el.innerHTML='<div class="es"><i class="ti ti-package"></i><p>部品が登録されていません</p><p class="sb">「部品を追加する」から登録しましょう</p></div>';return}
+  const scC=x=>x.s===0?'ot':(x.s<=x.mn?'lw':'');
+  const bg=x=>x.s===0?'<span class="bge lw">在庫切れ</span>':(x.s<=x.mn?'<span class="bge wn">残少</span>':'<span class="bge ok">在庫あり</span>');
+  const pct=x=>x.mn>0?Math.min(100,Math.round(x.s/(x.mn*3)*100)):(x.s>0?100:0);
+  const vl=x=>x.vid==='common'?'共通':vN(x.vid);
+  el.innerHTML=list.map(x=>`<div class="pit"><div class="ic" style="background:var(--orl);color:var(--or);width:36px;height:36px"><i class="ti ${CI[x.cat]||'ti-package'}"></i></div><div class="pin"><div class="pn">${esc(x.n)}</div><div class="pm">${CL[x.cat]||x.cat} · ${vl(x)}${x.pr?' · ¥'+Number(x.pr).toLocaleString():''}</div><div style="margin-top:3px">${bg(x)}</div></div><div class="pr2"><div><span class="sv">${x.s}</span><span class="su">${esc(x.u)}</span></div><div class="sb2"><div class="sf ${scC(x)}" style="width:${pct(x)}%"></div></div><div class="sk"><button class="skb m" onclick="chgS('${x.id}',-1)">−</button><button class="skb p" onclick="chgS('${x.id}',1)">＋</button></div></div></div>`).join('');
+}
+function filtP(el){PF=el.dataset.s;renderParts()}
+function chgS(id,d){const p=DB.p.find(x=>x.id===id);if(!p)return;p.s=Math.max(0,(p.s||0)+d);saveDB();renderParts();if(p.s===0)toast('⚠️「'+p.n+'」が在庫切れ');else if(p.s<=p.mn)toast('⚠️「'+p.n+'」の在庫が残り少ない')}
+function openAP(){
+  const sel=document.getElementById('apv');
+  sel.innerHTML='<option value="common">共通（全車両）</option>'+DB.v.map(v=>`<option value="${v.id}">${esc(v.maker)} ${esc(v.model)}</option>`).join('');
+  ['apn','apk','apmemo'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('aps').value='0';document.getElementById('apu').value='個';document.getElementById('apm').value='1';document.getElementById('app2').value='';document.getElementById('apc').value='oil';
+  document.getElementById('apmod').classList.add('on');
+}
+function saveP(){
+  const n=document.getElementById('apn').value.trim();if(!n){toast('⚠️ 部品名を入力してください');return}
+  DB.p.push({id:uid(),n,vid:document.getElementById('apv').value,cat:document.getElementById('apc').value,s:parseInt(document.getElementById('aps').value)||0,u:document.getElementById('apu').value||'個',mn:parseInt(document.getElementById('apm').value)||1,pr:document.getElementById('app2').value||'',maker:document.getElementById('apk').value||'',memo:document.getElementById('apmemo').value||''});
+  saveDB();closeOv('apmod');toast('✅「'+n+'」を追加しました');renderParts();
+}
+
+// ── グラフ ──
+let chCostInst=null,chEffInst=null,chKmInst=null;
+function last6Months(){const arr=[],d=new Date();for(let i=5;i>=0;i--){const dt=new Date(d.getFullYear(),d.getMonth()-i,1);arr.push(dt.toISOString().slice(0,7))}return arr}
+function mLabel(ym){const p=ym.split('-');return parseInt(p[1])+'月'}
+function popGraphSel(){
+  const sel=document.getElementById('gvs'),cur=sel.value;
+  sel.innerHTML='<option value="">全車両（合計）</option>'+DB.v.map(v=>`<option value="${v.id}"${v.id===cur?' selected':''}>${esc(v.maker)} ${esc(v.model)}</option>`).join('');
+}
+function cssVar(n){return getComputedStyle(document.documentElement).getPropertyValue(n).trim()}
+function renderGraphs(){
+  if(typeof Chart==='undefined')return;
+  const vid=document.getElementById('gvs').value;
+  const ff=vid?DB.f.filter(x=>x.vid===vid):DB.f;
+  const fm=vid?DB.m.filter(x=>x.vid===vid):DB.m;
+  const fd=vid?DB.d.filter(x=>x.vid===vid):DB.d;
+  const blue=cssVar('--bl')||'#185FA5',green=cssVar('--gn')||'#1D9E75',orange=cssVar('--or')||'#BA7517',grid=cssVar('--br')||'rgba(0,0,0,.08)',txt=cssVar('--t2')||'#6B7280';
+  Chart.defaults.font.family=getComputedStyle(document.body).fontFamily;
+  Chart.defaults.color=txt;
+
+  // 月別費用
+  const months=last6Months(),labels=months.map(mLabel);
+  const fuelCost=months.map(m=>ff.filter(x=>x.date.startsWith(m)).reduce((s,x)=>s+Number(x.tot||0),0));
+  const maintCost=months.map(m=>fm.filter(x=>x.date.startsWith(m)).reduce((s,x)=>s+Number(x.cost||0),0));
+  const hasCost=fuelCost.some(v=>v>0)||maintCost.some(v=>v>0);
+  document.getElementById('chCostEmpty').style.display=hasCost?'none':'block';
+  document.getElementById('chCost').style.display=hasCost?'block':'none';
+  if(chCostInst)chCostInst.destroy();
+  if(hasCost){
+    chCostInst=new Chart(document.getElementById('chCost'),{type:'bar',data:{labels,datasets:[
+      {label:'給油費',data:fuelCost,backgroundColor:blue,borderRadius:4},
+      {label:'整備費',data:maintCost,backgroundColor:orange,borderRadius:4}
+    ]},options:{responsive:true,maintainAspectRatio:false,scales:{x:{stacked:true,grid:{display:false}},y:{stacked:true,grid:{color:grid},ticks:{callback:v=>'¥'+v.toLocaleString()}}},plugins:{legend:{position:'bottom',labels:{boxWidth:10,font:{size:11}}}}}});
+  }
+
+  // 燃費推移
+  const effRecs=ff.filter(x=>x.kp).sort((a,b)=>a.date.localeCompare(b.date)).slice(-12);
+  const hasEff=effRecs.length>0;
+  document.getElementById('chEffEmpty').style.display=hasEff?'none':'block';
+  document.getElementById('chEff').style.display=hasEff?'block':'none';
+  if(chEffInst)chEffInst.destroy();
+  if(hasEff){
+    chEffInst=new Chart(document.getElementById('chEff'),{type:'line',data:{labels:effRecs.map(x=>(new Date(x.date).getMonth()+1)+'/'+new Date(x.date).getDate()),datasets:[{label:'燃費(km/L)',data:effRecs.map(x=>Number(x.kp)),borderColor:green,backgroundColor:green,tension:.3,pointRadius:3,fill:false}]},options:{responsive:true,maintainAspectRatio:false,scales:{x:{grid:{display:false}},y:{grid:{color:grid}}},plugins:{legend:{display:false}}}});
+  }
+
+  // 月別走行距離
+  const kmByM=months.map(m=>fd.filter(x=>x.date.startsWith(m)).reduce((s,x)=>s+Number(x.km||0),0));
+  const hasKm=kmByM.some(v=>v>0);
+  document.getElementById('chKmEmpty').style.display=hasKm?'none':'block';
+  document.getElementById('chKm').style.display=hasKm?'block':'none';
+  if(chKmInst)chKmInst.destroy();
+  if(hasKm){
+    chKmInst=new Chart(document.getElementById('chKm'),{type:'bar',data:{labels,datasets:[{label:'走行距離(km)',data:kmByM,backgroundColor:blue,borderRadius:4}]},options:{responsive:true,maintainAspectRatio:false,scales:{x:{grid:{display:false}},y:{grid:{color:grid}}},plugins:{legend:{display:false}}}});
+  }
+}
+
+// ── データ管理 ──
+function exportJSON(){
+  if(!DB.v.length&&!DB.f.length&&!DB.m.length&&!DB.d.length&&!DB.p.length){toast('ℹ️ データがありません');return}
+  const blob=new Blob([JSON.stringify(DB,null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');
+  a.href=url;a.download='車両管理バックアップ_'+new Date().toISOString().split('T')[0]+'.json';a.click();URL.revokeObjectURL(url);toast('✅ JSONバックアップを保存しました');
+}
+function importJSON(file){
+  if(!file)return;const reader=new FileReader();
+  reader.onload=e=>{try{const data=JSON.parse(e.target.result);if(!Array.isArray(data.v)||!Array.isArray(data.f)||!Array.isArray(data.m)||!Array.isArray(data.d)||!Array.isArray(data.p)){toast('⚠️ 無効なファイルです');return}DB=data;saveDB();toast('✅ インポート完了（車両'+DB.v.length+'台）');setTimeout(()=>go('sh'),400)}catch(e){toast('⚠️ インポート失敗')}};
+  reader.readAsText(file);document.getElementById('jsonImp').value='';
+}
+function exportCSV(){
+  if(!DB.v.length&&!DB.f.length&&!DB.m.length){toast('ℹ️ データがありません');return}
+  let csv='\uFEFFデータ種別,日付,車両,内容,金額\n';
+  DB.f.forEach(x=>{csv+=`給油,${x.date},${vN(x.vid)},${x.l}L${x.kp?' 燃費'+x.kp+'km/L':''},¥${Number(x.tot).toLocaleString()}\n`});
+  DB.m.forEach(x=>{csv+=`整備,${x.date},${vN(x.vid)},${x.title},¥${Number(x.cost).toLocaleString()}\n`});
+  DB.d.forEach(x=>{csv+=`走行,${x.date},${vN(x.vid)},${x.title||'走行記録'} ${x.km}km,—\n`});
+  DB.p.forEach(x=>{csv+=`部品,—,${x.vid==='common'?'共通':vN(x.vid)},${x.n} 在庫${x.s}${x.u},${x.pr?'¥'+Number(x.pr).toLocaleString():'—'}\n`});
+  const blob=new Blob([csv],{type:'text/csv;charset=utf-8;'}),url=URL.createObjectURL(blob),a=document.createElement('a');
+  a.href=url;a.download='車両管理_'+new Date().toISOString().split('T')[0]+'.csv';a.click();URL.revokeObjectURL(url);toast('✅ CSVをエクスポートしました');
+}
+function doDelete(){DB=JSON.parse(JSON.stringify(DEF));CID=null;saveDB();closeOv('delmod');toast('🗑️ 全データを削除しました');setTimeout(()=>go('sh'),400)}
+
+// ── 初期化 ──
+document.addEventListener('DOMContentLoaded',()=>{
+  const today=new Date().toISOString().split('T')[0];
+  ['fd','md2','dd'].forEach(id=>{const el=document.getElementById(id);if(el)el.value=today});
+  document.getElementById('ntMaint').checked=NP.maintOn;
+  document.getElementById('ntWindow').value=String(NP.window);
+  renderHome();
+});
+</script>
+</body>
+</html>
